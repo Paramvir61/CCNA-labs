@@ -2,7 +2,7 @@
 
 Hands-on Cisco Packet Tracer labs completed while preparing for the **Cisco CCNA 200-301** exam, organized by exam domain. Each lab folder contains a README (objective, topology, addressing, configuration, verification, takeaways), a topology image, and the `.pkt` file.
 
-**Author:** Paramvir · **Tool:** Cisco Packet Tracer · **Progress:** 7 of 49 labs documented
+**Author:** Paramvir · **Tool:** Cisco Packet Tracer · **Progress:** 8 of 49 labs documented
 
 ## 3.0 IP Connectivity
 
@@ -17,6 +17,7 @@ Hands-on Cisco Packet Tracer labs completed while preparing for the **Cisco CCNA
 | --- | --- | --- | --- |
 | 01 | [DHCP on a Router](04-ip-services/01-dhcp-on-router/) | DHCP pool, excluded addresses | 2026-06-27 |
 | 02 | [DHCP on a Server](04-ip-services/02-dhcp-on-server/) | Server-based DHCP, /28 subnetting | 2026-06-27 |
+| 03 | [Static NAT](04-ip-services/03-static-nat/) | One-to-one NAT, inside/outside interfaces, default routes | 2026-07-08 |
 
 ## 5.0 Security Fundamentals
 
