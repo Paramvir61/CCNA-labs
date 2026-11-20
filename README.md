@@ -2,7 +2,7 @@
 
 Hands-on Cisco Packet Tracer labs completed while preparing for the **Cisco CCNA 200-301** exam, organized by exam domain. Each lab folder contains a README (objective, topology, addressing, configuration, verification, takeaways), a topology image, and the `.pkt` file.
 
-**Author:** Paramvir · **Tool:** Cisco Packet Tracer · **Progress:** 11 of 49 labs documented
+**Author:** Paramvir · **Tool:** Cisco Packet Tracer · **Progress:** 12 of 49 labs documented
 
 ## 3.0 IP Connectivity
 
@@ -29,6 +29,7 @@ Hands-on Cisco Packet Tracer labs completed while preparing for the **Cisco CCNA
 | 02 | [SSH Remote Access on a Router](05-security-fundamentals/02-ssh-remote-access/) | RSA keys, local users, VTY SSH-only access | 2026-06-27 |
 | 03 | [Telnet Remote Access on a Router](05-security-fundamentals/03-telnet-remote-access/) | VTY lines, login vs no login, Telnet vs SSH | 2026-06-28 |
 | 04 | [Standard ACL](05-security-fundamentals/04-standard-acl/) | Numbered ACL, implicit deny, ACL placement | 2026-07-11 |
+| 05 | [Extended ACL](05-security-fundamentals/05-extended-acl/) | Protocol/port filtering, DHCP blocked by implicit deny (troubleshooting) | 2026-07-12 |
 
 ## How to open the labs
 
