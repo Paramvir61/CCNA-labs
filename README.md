@@ -2,7 +2,7 @@
 
 Hands-on Cisco Packet Tracer labs completed while preparing for the **Cisco CCNA 200-301** exam, organized by exam domain. Each lab folder contains a README (objective, topology, addressing, configuration, verification, takeaways), a topology image, and the `.pkt` file.
 
-**Author:** Paramvir · **Tool:** Cisco Packet Tracer · **Progress:** 12 of 49 labs documented
+**Author:** Paramvir · **Tool:** Cisco Packet Tracer · **Progress:** 13 of 49 labs documented
 
 ## 3.0 IP Connectivity
 
@@ -20,6 +20,7 @@ Hands-on Cisco Packet Tracer labs completed while preparing for the **Cisco CCNA
 | 03 | [Static NAT](04-ip-services/03-static-nat/) | One-to-one NAT, inside/outside interfaces, default routes | 2026-07-08 |
 | 04 | [Dynamic NAT](04-ip-services/04-dynamic-nat/) | NAT pool, ACL, dynamic translations, NAT statistics | 2026-07-09 |
 | 05 | [PAT (NAT Overload)](04-ip-services/05-pat/) | Overload, port-based translation, NAT types compared | 2026-07-09 |
+| 06 | [NTP & Syslog](04-ip-services/06-ntp-syslog/) | NTP client, central syslog, severity levels, timestamps | 2026-07-12 |
 
 ## 5.0 Security Fundamentals
 
