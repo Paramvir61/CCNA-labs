@@ -26,6 +26,7 @@ Replace insecure remote management with SSH: generate RSA keys, create local use
 enable
 configure terminal
 hostname R1
+enable secret <password>
 ip domain-name cisco.com
 crypto key generate rsa        ! choose 1024 bits when prompted
 username admin password admin1
@@ -53,6 +54,7 @@ ssh -l admin 192.168.10.1
 
 ```
 hostname R1
+enable secret 5 $1$mERr$Bok4KDfVutXOJolNq009M/
 username admin password 0 admin1
 username admin2 password 0 admin2
 ip domain-name cisco.com
@@ -72,7 +74,7 @@ Further checks on R1:
 
 ## Key Takeaways
 
-- **No enable password = no privileged access remotely.** After logging in over SSH, `enable` fails with `% No password set` because none is configured. Over VTY, IOS requires an enable password or secret before allowing privileged EXEC mode. Fix: `enable secret <password>`.
+- **Remote users need an enable secret.** Without one, `enable` over SSH fails with `% No password set` — IOS will not grant privileged EXEC mode to a VTY session unless an enable password or secret exists. This lab uses `enable secret`, stored as a type 5 (MD5) hash (`$1$...`), far stronger than the reversible type 7 used by `enable password` with `service password-encryption`.
 - **Plain-text passwords.** `password 0` means the user passwords are stored in clear text. Use `username admin secret <password>` to store a hash instead.
 - **Two SSH sessions maximum.** Only VTY 0–1 accept SSH. VTY 2–4 have `login` with no password, so they refuse every connection. Configuring `line vty 0 4` gives one consistent policy.
 - **SSH version.** Add `ip ssh version 2` to disable the weaker SSHv1.
@@ -80,7 +82,6 @@ Further checks on R1:
 ## Improvements
 
 ```
-enable secret <strong-password>
 username admin secret <strong-password>
 ip ssh version 2
 line vty 0 4

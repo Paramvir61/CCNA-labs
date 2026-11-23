@@ -91,6 +91,24 @@ R3: network 20.0.0.0 0.0.0.255
 - `show logging`: logging state, trap level and the syslog host
 - **Server0 → Services → SYSLOG**: messages arriving from the routers. **Confirmed:** log messages generated on the routers appear on the syslog server as well as on the local console.
 
+### `show logging` on R1 (key lines)
+
+```
+Syslog logging: enabled (0 messages dropped, 0 messages rate-limited, ...)
+    Console logging: level debugging, 11 messages logged
+    Trap logging: level debugging, 11 message lines logged
+        Logging to 192.168.30.4  (udp port 514,  audit disabled,
+             authentication disabled, encryption disabled, link up),
+             11 message lines logged,
+             0 message lines dropped-by-MD
+```
+
+- **Trap logging: level debugging**: all severities 0–7 are sent to the server
+- **Logging to 192.168.30.4 (udp port 514 … link up)**: the syslog host is configured and reachable
+- **11 message lines logged** to the host, matching the 11 logged to the console: nothing was lost on the way
+
+The log buffer starts with `%SYS-6-LOGGINGHOST_STARTSTOP: Logging to host 192.168.30.4 port 514 started - CLI initiated`, the router's own record of the moment `logging 192.168.30.4` was entered.
+
 ### Sample log output (R2)
 
 ```
@@ -120,11 +138,11 @@ Reading one message:
 
 ## Findings
 
-- **R1 is missing `service timestamps log datetime msec`.** Its config shows `no service timestamps log datetime msec`, while R2 and R3 have it enabled. R1's messages reach the syslog server without date and time, which defeats the point of syncing clocks with NTP. Fix on R1:
+- **No DHCP exclusions, and the syslog server caught it.** None of the pools exclude the gateway (.1), and R3's pool also covers Server0's static address (192.168.30.4). R1's own log shows the result:
   ```
-  service timestamps log datetime msec
+  *Jul 12, 22:54:11.5454: DHCPD-4-PING_CONFLICT: DHCP address conflict:  server pinged 192.168.10.1.
   ```
-- **No DHCP exclusions.** None of the pools exclude the gateway (.1), and R3's pool also covers Server0's static address (192.168.30.4). The router's DHCP ping check then reports conflicts, as in the [Extended ACL lab](../../05-security-fundamentals/05-extended-acl/). Fix on R3, and exclude each gateway the same way on R1 and R2:
+  This is exactly what central logging is for: the warning (severity 4) was recorded on the syslog server too. It's the same issue as in the [Extended ACL lab](../../05-security-fundamentals/05-extended-acl/). Fix on R3, and exclude each gateway the same way on R1 and R2:
   ```
   ip dhcp excluded-address 192.168.30.1
   ip dhcp excluded-address 192.168.30.4

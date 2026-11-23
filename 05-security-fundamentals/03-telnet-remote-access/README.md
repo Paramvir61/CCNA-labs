@@ -26,13 +26,13 @@ Enable remote, text-based management of a router over Telnet from LAN hosts, the
 enable
 configure terminal
 enable secret <password>
+username ccna password ccna
 line vty 0 1
- password <password>
- login
+ login local
  exit
 ```
 
-`line vty 0 1` allows two simultaneous Telnet sessions. `enable secret` is required so a remote user can enter privileged EXEC mode.
+`line vty 0 1` allows two simultaneous Telnet sessions, and `login local` makes each one authenticate against the router's local user accounts. `enable secret` is required so a remote user can enter privileged EXEC mode.
 
 ### On a client PC
 
@@ -49,27 +49,29 @@ telnet 192.168.10.1
 ```
 hostname R1
 enable secret 5 $1$mERr$Bok4KDfVutXOJolNq009M/
+username ccna password 0 ccna
 interface GigabitEthernet0/0
  ip address 192.168.10.1 255.255.255.240
 line vty 0 1
- no login
+ login local
 line vty 2 4
  login
 ```
+
+From a PC, `telnet 192.168.10.1` now prompts for the username and password before giving a CLI session.
 
 `ipconfig` on Server0 confirms the LAN addressing: 192.168.10.2 / 255.255.255.240, gateway 192.168.10.1.
 
 Further checks on R1: `show users` lists active VTY sessions and where they come from.
 
-## Finding: VTY 0–1 Accept Anyone
+## Troubleshooting: From `no login` to `login local`
 
-The saved configuration shows `no login` on VTY 0–1, so **no password is asked at all** — any host that can reach 192.168.10.1 gets a CLI session. VTY 2–4 have `login` with no password, so they refuse connections. The fix is `login` plus a password, or better, `login local` with user accounts:
+The first saved version of this lab had `no login` on VTY 0–1, so **no password was asked at all** — any host that could reach 192.168.10.1 got a CLI session. It was fixed by creating a local user and switching the lines to `login local`, so every session now needs a username and password.
 
-```
-username admin secret <password>
-line vty 0 4
- login local
-```
+Remaining hardening:
+
+- `username ccna password 0 ccna` stores the password in clear text — use `username ccna secret <password>` for a hash.
+- VTY 2–4 have `login` with no password, so they refuse connections. `line vty 0 4` with `login local` gives one consistent policy.
 
 ## Telnet vs SSH
 

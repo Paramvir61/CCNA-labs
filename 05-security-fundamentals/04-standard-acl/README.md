@@ -68,8 +68,35 @@ interface gigabitEthernet 0/0
 
 - `show access-lists`: each entry with its match counter
 - `show ip interface g0/0`: confirms "Inbound access list is 1"
-- Ping from PC1 (192.168.10.3) to any remote LAN: expected to fail. R1 drops the packet and can return "Destination host unreachable" (ICMP administratively prohibited).
-- Ping from PC0 (192.168.10.2) to the same host: expected to succeed
+### Blocked: PC1 (192.168.10.3) → PC2 (192.168.20.2)
+
+```
+C:\>ping 192.168.20.2
+
+Reply from 192.168.10.1: Destination host unreachable.
+Reply from 192.168.10.1: Destination host unreachable.
+Reply from 192.168.10.1: Destination host unreachable.
+Reply from 192.168.10.1: Destination host unreachable.
+
+Packets: Sent = 4, Received = 0, Lost = 4 (100% loss)
+```
+
+The reply comes from **192.168.10.1**, which is R1's own LAN interface. The packet never left LAN 1: R1 matched it against `deny host 192.168.10.3`, dropped it, and sent back an ICMP unreachable.
+
+### Allowed: PC0 (192.168.10.2) → PC2 (192.168.20.2)
+
+```
+C:\>ping 192.168.20.2
+
+Reply from 192.168.20.2: bytes=32 time<1ms TTL=126
+Reply from 192.168.20.2: bytes=32 time<1ms TTL=126
+Reply from 192.168.20.2: bytes=32 time<1ms TTL=126
+Reply from 192.168.20.2: bytes=32 time<1ms TTL=126
+
+Packets: Sent = 4, Received = 4, Lost = 0 (0% loss)
+```
+
+Same destination, different source: PC0 matches `permit any` and gets through. **TTL=126** confirms the path: PC2 replies with TTL 128, and the two routers on the way back (R2, R1) each subtract 1.
 
 ## ACL Placement
 

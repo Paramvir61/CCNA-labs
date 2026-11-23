@@ -87,7 +87,23 @@ The `---` protocol entry is the permanent static mapping — it exists before an
 ping 10.0.0.26
 ```
 
-`show ip nat translations` on R2 after a ping from LAN 1 to 10.0.0.26:
+`show ip nat translations` on R1 after pinging 10.0.0.26 from PC0:
+
+```
+Pro  Inside global     Inside local       Outside local      Outside global
+icmp 10.0.0.20:2       192.168.10.2:2     10.0.0.26:2        10.0.0.26:2
+icmp 10.0.0.20:3       192.168.10.2:3     10.0.0.26:3        10.0.0.26:3
+icmp 10.0.0.20:4       192.168.10.2:4     10.0.0.26:4        10.0.0.26:4
+icmp 10.0.0.20:5       192.168.10.2:5     10.0.0.26:5        10.0.0.26:5
+icmp 10.0.0.20:6       192.168.10.2:6     10.0.0.26:6        10.0.0.26:6
+icmp 10.0.0.20:7       192.168.10.2:7     10.0.0.26:7        10.0.0.26:7
+icmp 10.0.0.20:8       192.168.10.2:8     10.0.0.26:8        10.0.0.26:8
+---  10.0.0.20         192.168.10.2       ---                ---
+```
+
+PC0's private address 192.168.10.2 left R1 as 10.0.0.20 and reached PC2's public address 10.0.0.26 — so both static mappings worked end to end. Each `icmp` line is one echo request; the number after the colon is the ICMP identifier, which keeps each exchange separate.
+
+`show ip nat translations` on R2 after an earlier ping to 10.0.0.26 from another LAN 1 host:
 
 ```
 Pro  Inside global     Inside local       Outside local      Outside global
@@ -100,14 +116,12 @@ icmp 10.0.0.26:8       192.168.20.2:8     192.168.10.3:8     192.168.10.3:8
 ---  10.0.0.26         192.168.20.2       ---                ---
 ```
 
-Each `icmp` line is one echo request: R2 translated the destination 10.0.0.26 to PC2's real address 192.168.20.2, and the reply went back out as 10.0.0.26. The number after the colon is the ICMP identifier, which keeps each exchange separate.
-
-The sender shows up as **192.168.10.3**, not as 10.0.0.20. R1 only translates 192.168.10.2, so traffic from any other LAN 1 address leaves R1 untranslated. The reply still gets home because R2's default route sends 192.168.10.x back to R1 — in a real network, a private source address like this would be dropped on the internet.
+R2 still translated the destination 10.0.0.26 to PC2's real address 192.168.20.2, but the sender shows up as **192.168.10.3**, not as a public address. R1 only translates 192.168.10.2, so traffic from any other LAN 1 address leaves R1 untranslated. The reply still gets home because R2's default route sends 192.168.10.x back to R1 — in a real network, a private source address like this would be dropped on the internet.
 
 ## Key Takeaways
 
 - Static NAT is **one-to-one and permanent**: it also lets outside hosts start connections *in* to the inside host (useful for servers).
 - Every NAT setup needs three parts: `ip nat inside`, `ip nat outside`, and a translation rule.
 - The default routes point each router at the other's outside address — the only addresses the routers need to know.
-- **Watch out:** the mapped hosts get their addresses from DHCP. If PC0 leases a different address, the static rule no longer matches it and its traffic leaves untranslated — exactly what the 192.168.10.3 source above looks like. Hosts behind static NAT should use a static IP or a DHCP reservation.
+- **Watch out:** the mapped hosts get their addresses from DHCP. If PC0 ever leased a different address, the static rule would no longer match it and its traffic would leave untranslated, like the 192.168.10.3 traffic above. Hosts behind static NAT should use a static IP or a DHCP reservation.
 - Static NAT does not scale — one public address per host. Dynamic NAT and PAT (overload) solve that.

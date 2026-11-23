@@ -68,13 +68,15 @@ ip dhcp pool r1
 - `show ip route rip` — routes learned from RIP, marked `R` with `[120/hops]`
 - `ping` between PCs on different LANs (e.g. PC6 → PC11)
 
-Expected routes learned on R1:
+`show ip route rip` on R1:
 
-| Network | Via | Hops |
-| --- | --- | --- |
-| 12.0.0.0/8 | 11.0.0.2 | 1 |
-| 20.0.0.0/8 | 11.0.0.2 | 1 |
-| 30.0.0.0/8 | 11.0.0.2 | 2 |
+```
+R    12.0.0.0/8 [120/1] via 11.0.0.2, 00:00:11, GigabitEthernet0/1
+R    20.0.0.0/8 [120/1] via 11.0.0.2, 00:00:11, GigabitEthernet0/1
+R    30.0.0.0/8 [120/2] via 11.0.0.2, 00:00:11, GigabitEthernet0/1
+```
+
+Reading `[120/2]`: **120** is RIP's administrative distance and **2** is the hop count — LAN 3 (30.0.0.0) sits two routers away (R2, then R3). All three remote networks are learned through R2 (11.0.0.2), R1's only neighbor.
 
 ## RIP Version 2 and Timers
 
