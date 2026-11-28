@@ -2,7 +2,7 @@
 
 Hands-on Cisco Packet Tracer labs completed while preparing for the **Cisco CCNA 200-301** exam, organized by exam domain. Each lab folder contains a README (objective, topology, addressing, configuration, verification, takeaways), a topology image, and the `.pkt` file.
 
-**Author:** Paramvir · **Tool:** Cisco Packet Tracer · **Progress:** 16 of 49 labs documented
+**Author:** Paramvir · **Tool:** Cisco Packet Tracer · **Progress:** 17 of 49 labs documented
 
 ## 3.0 IP Connectivity
 
@@ -12,6 +12,7 @@ Hands-on Cisco Packet Tracer labs completed while preparing for the **Cisco CCNA
 | 02 | [EIGRP Configuration](03-ip-connectivity/02-eigrp-configuration/) | EIGRP AS 1, diamond topology, equal-cost load balancing, FD/RD | 2026-07-04 |
 | 03 | [HSRP](03-ip-connectivity/03-hsrp/) | Virtual gateway, active/standby election, failover | 2026-08-06 |
 | 04 | [OSPF Multi-Area](03-ip-connectivity/04-ospf-multi-area/) | Areas 0/1/2, ABRs, router IDs, neighbor states, DR/BDR | 2026-08-11 |
+| 05 | [Static Routing](03-ip-connectivity/05-static-routing/) | Next-hop static routes, 3 sites, default route alternative | 2026-08-13 |
 
 ## 4.0 IP Services
 
