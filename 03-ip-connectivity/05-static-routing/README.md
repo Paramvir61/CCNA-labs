@@ -72,12 +72,38 @@ ip dhcp pool r2
 
 ## Verification
 
+### `show ip route` on R1
+
+```
+Gateway of last resort is not set
+
+     10.0.0.0/8 is variably subnetted, 2 subnets, 2 masks
+C       10.0.0.0/8 is directly connected, GigabitEthernet0/0
+L       10.0.0.1/32 is directly connected, GigabitEthernet0/0
+     11.0.0.0/8 is variably subnetted, 2 subnets, 2 masks
+C       11.0.0.0/8 is directly connected, GigabitEthernet0/1
+L       11.0.0.1/32 is directly connected, GigabitEthernet0/1
+S    20.0.0.0/8 [1/0] via 11.0.0.2
+S    30.0.0.0/8 [1/0] via 11.0.0.2
+```
+
+| Code | Entry | Meaning |
+| --- | --- | --- |
+| `C` | 10.0.0.0/8, 11.0.0.0/8 | networks on R1's own interfaces |
+| `L` | 10.0.0.1/32, 11.0.0.1/32 | R1's own interface addresses (host routes) |
+| `S` | 20.0.0.0/8, 30.0.0.0/8 | the static routes: `[1/0]` = AD 1, metric 0, both through R2 at 11.0.0.2 |
+
+- **"Gateway of last resort is not set"**: there is no default route, so a packet for any network not in this table is dropped. With the default-route improvement below, this line would show 11.0.0.2.
+- There is **no route to 12.0.0.0** (the R2–R3 link). R1 can't ping R3's 12.0.0.2 address, but the LANs can still reach each other, which is all this lab needs.
+
+Other checks:
+
 - `show ip route static`: routes marked `S` with `[1/0]` (AD 1, metric 0)
 - `show ip route`: static routes alongside the directly connected (`C`) and local (`L`) networks
 - Ping from PC0 (LAN 1) to PC2 (LAN 2) and PC4 (LAN 3)
 - `tracert` from PC0 to a LAN 3 address: shows each router hop (10.0.0.1 → 11.0.0.2 → 12.0.0.2)
 
-## Finding: DHCP Exclusions Missing on R1 and R3
+## Troubleshooting: DHCP Exclusions Missing on R1 and R3
 
 The build notes include an exclusion on every router, but only **R2's** running config has one:
 
@@ -100,6 +126,8 @@ R3(config)# ip dhcp excluded-address 30.0.0.1
 ```
 
 Without it, the router's DHCP ping check finds its own gateway address in use and logs a `%DHCPD-4-PING_CONFLICT` message, as seen in the [NTP & Syslog lab](../../04-ip-services/06-ntp-syslog/).
+
+**Status: fixed.** Both exclusions were added from global configuration, so all three routers now keep their gateway address out of the pool.
 
 ## Improvement: Default Routes on the Edge Routers
 
