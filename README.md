@@ -2,7 +2,13 @@
 
 Hands-on Cisco Packet Tracer labs completed while preparing for the **Cisco CCNA 200-301** exam, organized by exam domain. Each lab folder contains a README (objective, topology, addressing, configuration, verification, takeaways), a topology image, and the `.pkt` file.
 
-**Author:** Paramvir · **Tool:** Cisco Packet Tracer · **Progress:** 17 of 49 labs documented
+**Author:** Paramvir · **Tool:** Cisco Packet Tracer · **Progress:** 18 of 49 labs documented
+
+## 2.0 Network Access
+
+| # | Lab | Topics | Completed |
+| --- | --- | --- | --- |
+| 01 | [EtherChannel (LACP)](02-network-access/01-etherchannel/) | LACP active/passive, port-channel, STP and bundling | 2026-08-15 |
 
 ## 3.0 IP Connectivity
 
